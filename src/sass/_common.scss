@@ -30,10 +30,15 @@
 
 img {
   width: 100%;
+  display: block;
 }
 
 a {
   display: block;
   text-decoration: none;
   color: inherit;
+}
+
+p {
+  margin: 0;
 }

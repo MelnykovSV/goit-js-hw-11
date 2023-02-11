@@ -1,21 +1,27 @@
 import { fetchImages } from './fetchImages';
 
 const gallery = document.querySelector('.gallery');
+const searchForm = document.querySelector('.search-form');
+searchForm.addEventListener('submit', e => {
+  e.preventDefault();
 
-console.log(gallery);
+  const searchInputvalue = e.currentTarget.querySelector('input').value;
 
-fetchImages('helicopter')
-  .then(data => {
-    console.log(data);
-    renderGallery(data);
-  })
-  .catch(error => {
-    console.log(error);
-  });
+  console.log(searchInputvalue);
+
+  fetchImages(searchInputvalue)
+    .then(data => {
+      console.log(data);
+      renderGallery(data);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+});
+
+//renders gallery
 
 function renderGallery(arrayOfObjects) {
-  //   clearElements(countryInfo);
-  //   hide(countryInfo);
   console.log(arrayOfObjects);
   const listArray = arrayOfObjects.hits.map(item => {
     const listData = {};
@@ -59,6 +65,4 @@ function renderGallery(arrayOfObjects) {
   console.log(markup);
 
   gallery.innerHTML = markup;
-  //   show(countryList);
-  //   return listArray;
 }

@@ -10,23 +10,23 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
+  grid-template-columns: repeat(1, min(320px, 100%));
   grid-template-rows: auto;
   column-gap: 20px;
   grid-auto-rows: auto;
   max-width: 100%;
 
   @media screen and (min-width: 341px) {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, min(320px, (100% - 20px)/2));
   }
   @media screen and (min-width: 681px) {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, min(320px, (100% - 40px)/3));
   }
   @media screen and (min-width: 1021px) {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, min(320px, (100% - 60px)/4));
   }
 }
 
 img {
-  max-width: 320px;
+  width: 100%;
 }

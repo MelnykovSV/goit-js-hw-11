@@ -2,16 +2,36 @@ import { fetchImages } from './fetchImages';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-let page = 2;
+let page = 1;
+let currentQuery;
 
 const gallery = document.querySelector('.gallery-content');
 const searchForm = document.querySelector('.search-form');
+const loadMoreButton = document.querySelector('.load-more');
+
 searchForm.addEventListener('submit', e => {
   e.preventDefault();
+  gallery.innerHTML = '';
+  page = 1;
 
   const searchInputvalue = e.currentTarget.querySelector('input').value;
 
+  currentQuery = e.currentTarget.querySelector('input').value;
+
   fetchImages(searchInputvalue, page)
+    .then(data => {
+      console.log(data);
+      renderGallery(data);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+});
+
+loadMoreButton.addEventListener('click', e => {
+  e.preventDefault();
+  page += 1;
+  fetchImages(currentQuery, page)
     .then(data => {
       console.log(data);
       renderGallery(data);
@@ -63,25 +83,7 @@ function renderGallery(arrayOfObjects) {
     })
     .join('');
 
-  gallery.innerHTML =
-    markup + '<button type="button" class="next-page">Next page</button>';
-
-  // gallery.insertAdjacentHTML("beforeend", markup);
-
-  // const nextPageButton = document.querySelector('.next-page');
-
-  // nextPageButton.addEventListener('click', e => {
-  //   page += 1;
-  //   const searchInputvalue = e.currentTarget.querySelector('input').value;
-  //   fetchImages(searchInputvalue, page)
-  //     .then(data => {
-  //       console.log(data);
-  //       renderGallery(data);
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //     });
-  // });
+  gallery.insertAdjacentHTML('beforeend', markup);
 
   const lightboxGallery = new SimpleLightbox('.gallery-content a', {
     captionsData: 'alt',

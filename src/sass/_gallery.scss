@@ -13,19 +13,28 @@
 .info {
   //   display: flex;
   //   flex-wrap: wrap;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: auto;
-  column-gap: 10px;
-  grid-auto-rows: auto;
-  max-width: 100%;
+  //   display: grid;
+  //   grid-template-columns: repeat(2, 1fr);
+  //   grid-template-rows: auto;
+  //   column-gap: 10px;
+  //   grid-auto-rows: auto;
+  //   max-width: 100%;
+  //   justify-content: center;
+
+  display: flex;
+
   justify-content: center;
+  gap: 10px;
 }
 .info-item {
-  font-size: 8px;
+  font-size: 10px;
   width: fit-content;
 }
 .info-container {
+  max-width: 100%;
   display: flex;
+  gap: 10px;
+  justify-content: space-evenly;
+
   flex-wrap: wrap;
 }

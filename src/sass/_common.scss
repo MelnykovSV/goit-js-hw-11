@@ -15,8 +15,9 @@
   column-gap: 20px;
   grid-auto-rows: auto;
   max-width: 100%;
+  justify-content: center;
 
-  @media screen and (min-width: 341px) {
+  @media screen and (min-width: 480px) {
     grid-template-columns: repeat(2, min(320px, (100% - 20px)/2));
   }
   @media screen and (min-width: 681px) {

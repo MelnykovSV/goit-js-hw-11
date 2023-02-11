@@ -2,6 +2,8 @@ import { fetchImages } from './fetchImages';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
+let page = 2;
+
 const gallery = document.querySelector('.gallery-content');
 const searchForm = document.querySelector('.search-form');
 searchForm.addEventListener('submit', e => {
@@ -9,7 +11,7 @@ searchForm.addEventListener('submit', e => {
 
   const searchInputvalue = e.currentTarget.querySelector('input').value;
 
-  fetchImages(searchInputvalue)
+  fetchImages(searchInputvalue, page)
     .then(data => {
       console.log(data);
       renderGallery(data);
@@ -61,9 +63,25 @@ function renderGallery(arrayOfObjects) {
     })
     .join('');
 
-  gallery.innerHTML = markup;
+  gallery.innerHTML =
+    markup + '<button type="button" class="next-page">Next page</button>';
 
   // gallery.insertAdjacentHTML("beforeend", markup);
+
+  // const nextPageButton = document.querySelector('.next-page');
+
+  // nextPageButton.addEventListener('click', e => {
+  //   page += 1;
+  //   const searchInputvalue = e.currentTarget.querySelector('input').value;
+  //   fetchImages(searchInputvalue, page)
+  //     .then(data => {
+  //       console.log(data);
+  //       renderGallery(data);
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //     });
+  // });
 
   const lightboxGallery = new SimpleLightbox('.gallery-content a', {
     captionsData: 'alt',

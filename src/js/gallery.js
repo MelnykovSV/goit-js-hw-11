@@ -9,7 +9,7 @@ const gallery = document.querySelector('.gallery-content');
 const searchForm = document.querySelector('.search-form');
 const loadMoreButton = document.querySelector('.load-more');
 
-searchForm.addEventListener('submit', e => {
+searchForm.addEventListener('submit', async e => {
   e.preventDefault();
   gallery.innerHTML = '';
   page = 1;
@@ -18,27 +18,33 @@ searchForm.addEventListener('submit', e => {
 
   currentQuery = e.currentTarget.querySelector('input').value;
 
-  fetchImages(searchInputvalue, page)
-    .then(data => {
-      console.log(data);
-      renderGallery(data);
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  try {
+    const data = await fetchImages(searchInputvalue, page);
+    renderGallery(data);
+    console.log('new function!' + data);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
-loadMoreButton.addEventListener('click', e => {
+loadMoreButton.addEventListener('click', async e => {
   e.preventDefault();
   page += 1;
-  fetchImages(currentQuery, page)
-    .then(data => {
-      console.log(data);
-      renderGallery(data);
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  try {
+    const data = await fetchImages(currentQuery, page);
+    renderGallery(data);
+  } catch (error) {
+    console.log(error);
+  }
+
+  // fetchImages(currentQuery, page)
+  //   .then(data => {
+  //     console.log(data);
+  //     renderGallery(data);
+  //   })
+  //   .catch(error => {
+  //     console.log(error);
+  //   });
 });
 
 //renders gallery

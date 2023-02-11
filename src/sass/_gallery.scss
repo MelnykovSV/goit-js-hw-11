@@ -1,7 +1,6 @@
 .gallery {
   background-color: rgb(224, 224, 237);
   padding-top: 60px;
-  box-shadow: 10px 10px 19px 0px rgba(0, 0, 0, 0.75);
 }
 .gallery__body {
 }
@@ -39,4 +38,14 @@
   @media screen and (min-width: 1370px) {
     font-size: 14px;
   }
+}
+
+.photo-card__thumb {
+  width: 320px;
+  height: 200px;
+}
+
+.photo-card__thumb > img {
+  object-fit: contain;
+  object-position: center;
 }

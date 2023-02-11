@@ -36,8 +36,9 @@ function renderGallery(arrayOfObjects) {
   console.log(listArray);
   const markup = listArray
     .map(item => {
-      return `<div class="photo-card">
-      <img src="${item.webformatURL}" alt="${item.tags}" loading="lazy" data-largeImageURL='${item.largeImageURL}'/>
+      return `<a href="#" class="photo-card"><div class="photo-card__thumb">
+      <img src="${item.webformatURL}" alt="${item.tags}" loading="lazy" width="320"
+      height="220" data-largeImageURL='${item.largeImageURL}'/></div>
       <div class="info">
         <p class="info-item">
           <b>Likes</b>
@@ -56,7 +57,7 @@ function renderGallery(arrayOfObjects) {
           ${item.downloads}
         </p>
       </div>
-    </div>`;
+    </a>`;
     })
     .join('');
 

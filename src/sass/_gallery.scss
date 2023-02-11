@@ -23,7 +23,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: calc((100vw - 30px) * 0.04375);
+  font-size: 14px;
+
   @media screen and (min-width: 480px) {
     font-size: calc((100vw - 50px) / 2 * 0.04375);
   }

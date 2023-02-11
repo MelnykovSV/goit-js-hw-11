@@ -2,7 +2,7 @@
 
 .container {
   margin: 0 auto;
-  max-width: 1370px;
+  width: min(100%, 1370px);
   padding-left: 15px;
   padding-right: 15px;
   display: grid;
@@ -14,6 +14,7 @@
   grid-template-rows: auto;
   column-gap: 20px;
   grid-auto-rows: auto;
+  max-width: 100%;
 
   @media screen and (min-width: 341px) {
     grid-template-columns: repeat(2, 1fr);

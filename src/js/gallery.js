@@ -1,6 +1,7 @@
 import { fetchImages } from './fetchImages';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
+import Notiflix from 'notiflix';
 
 let page = 1;
 let currentQuery;
@@ -20,8 +21,13 @@ searchForm.addEventListener('submit', async e => {
 
   try {
     const data = await fetchImages(searchInputvalue, page);
-    renderGallery(data);
-    console.log('new function!' + data);
+    if (data.hits.length !== 0) {
+      renderGallery(data.hits);
+      return;
+    }
+    Notiflix.Notify.warning(
+      'Sorry, there are no images matching your search query. Please try again.'
+    );
   } catch (error) {
     console.log(error);
   }
@@ -32,26 +38,23 @@ loadMoreButton.addEventListener('click', async e => {
   page += 1;
   try {
     const data = await fetchImages(currentQuery, page);
-    renderGallery(data);
+
+    if (data.hits.length !== 0) {
+      renderGallery(data.hits);
+      return;
+    }
+    Notiflix.Notify.warning(
+      'Sorry, these are the last images matching your search query. Please try to search something else.'
+    );
   } catch (error) {
     console.log(error);
   }
-
-  // fetchImages(currentQuery, page)
-  //   .then(data => {
-  //     console.log(data);
-  //     renderGallery(data);
-  //   })
-  //   .catch(error => {
-  //     console.log(error);
-  //   });
 });
 
 //renders gallery
 
 function renderGallery(arrayOfObjects) {
-  console.log(arrayOfObjects);
-  const listArray = arrayOfObjects.hits.map(item => {
+  const listArray = arrayOfObjects.map(item => {
     const listData = {};
     listData.webformatURL = item.webformatURL;
     listData.largeImageURL = item.largeImageURL;
@@ -63,7 +66,6 @@ function renderGallery(arrayOfObjects) {
     return listData;
   });
 
-  console.log(listArray);
   const markup = listArray
     .map(item => {
       return `<a href="${item.largeImageURL}" class="photo-card gallery-item" data-capture="${item.tags}"><div class="photo-card__thumb"><img src="${item.webformatURL}" alt="${item.alt}" loading="lazy" width="320" height="220" data-largeImageURL='${item.largeImageURL}'/></div>

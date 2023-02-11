@@ -1,4 +1,6 @@
 import { fetchImages } from './fetchImages';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const gallery = document.querySelector('.gallery-content');
 const searchForm = document.querySelector('.search-form');
@@ -36,9 +38,7 @@ function renderGallery(arrayOfObjects) {
   console.log(listArray);
   const markup = listArray
     .map(item => {
-      return `<a href="#" class="photo-card"><div class="photo-card__thumb">
-      <img src="${item.webformatURL}" alt="${item.tags}" loading="lazy" width="320"
-      height="220" data-largeImageURL='${item.largeImageURL}'/></div>
+      return `<a href="${item.largeImageURL}" class="photo-card gallery-item" data-capture="${item.tags}"><div class="photo-card__thumb"><img src="${item.webformatURL}" alt="${item.alt}" loading="lazy" width="320" height="220" data-largeImageURL='${item.largeImageURL}'/></div>
       <div class="info">
         <p class="info-item">
           <b>Likes</b>
@@ -61,7 +61,12 @@ function renderGallery(arrayOfObjects) {
     })
     .join('');
 
-  console.log(markup);
-
   gallery.innerHTML = markup;
+
+  // gallery.insertAdjacentHTML("beforeend", markup);
+
+  const lightboxGallery = new SimpleLightbox('.gallery-content a', {
+    captionsData: 'alt',
+    captionDelay: 250,
+  });
 }

@@ -1,1 +1,9 @@
 @import '~node_modules/modern-normalize/modern-normalize.css';
+
+.container {
+  margin: 0 auto;
+  max-width: 1370px;
+  padding-left: 15px;
+  padding-right: 15px;
+  display: grid;
+}

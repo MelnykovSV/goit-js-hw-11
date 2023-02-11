@@ -1,13 +1,11 @@
 import { fetchImages } from './fetchImages';
 
-const gallery = document.querySelector('.gallery');
+const gallery = document.querySelector('.gallery-content');
 const searchForm = document.querySelector('.search-form');
 searchForm.addEventListener('submit', e => {
   e.preventDefault();
 
   const searchInputvalue = e.currentTarget.querySelector('input').value;
-
-  console.log(searchInputvalue);
 
   fetchImages(searchInputvalue)
     .then(data => {

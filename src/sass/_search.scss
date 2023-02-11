@@ -2,14 +2,34 @@
   background-color: rgb(94, 94, 185);
   position: fixed;
   width: 100%;
-  height: 60px;
+
   box-shadow: 10px 10px 19px 0px rgba(0, 0, 0, 0.2);
 }
 .search__body {
+  height: 60px;
+  display: flex;
+  align-items: center;
 }
 
 .search-form {
   margin: 0 auto;
+  position: relative;
+  width: min(320px, 100%);
 }
-.search-form__cubmit-icon {
+
+.search-form__input {
+  padding: 8px;
+  width: 100%;
+}
+.search-form__commit-button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 5px;
+  //   border: transparent;
+  height: 100%;
+  cursor: pointer;
+}
+.search-form__commit-icon {
+  height: 100%;
 }

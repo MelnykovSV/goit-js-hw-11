@@ -23,19 +23,29 @@
             </svg>
           </button>
         </form>
+        <button type="button" class="load-more">Load more</button>
+        <button type="button" class="infScroll">infScroll</button>
       </div>
     </section>
     <section class="gallery">
       <div class="gallery__body container">
-        <div
-          class="gallery-content grid"
-          data-infinite-scroll='{ "path": ".pagination__next", "append": ".post", "history": false }'
-        ></div>
+        <div class="gallery-content grid"></div>
       </div>
     </section>
 
-    <button type="button" class="load-more">Load more</button>
+    <!-- status elements -->
+    <!-- <div class="scroller-status">
+      <div class="infinite-scroll-request loader-ellips">...</div>
+      <p class="infinite-scroll-last">End of content</p>
+      <p class="infinite-scroll-error">No more pages to load</p>
+    </div> -->
 
+    <!-- pagination has path -->
+    <div class="pagination">
+      <a href="#" class="next">Next</a>
+    </div>
+
+    <script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"></script>
     <script type="module" src="./index.js"></script>
   </body>
 </html>

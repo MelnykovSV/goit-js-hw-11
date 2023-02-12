@@ -2,13 +2,34 @@ import { fetchImages } from './fetchImages';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import Notiflix from 'notiflix';
+import InfiniteAjaxScroll from '@webcreate/infinite-ajax-scroll';
 
 let page = 1;
 let currentQuery;
 
+let lastImage;
+
 const gallery = document.querySelector('.gallery-content');
 const searchForm = document.querySelector('.search-form');
 const loadMoreButton = document.querySelector('.load-more');
+// const infScrollButton = document.querySelector('.infScroll');
+// const trigger = document.querySelector('.pagination');
+
+// infScrollButton.addEventListener('click', () => {
+//   infScroll = new InfiniteScroll(document.body, {
+//     // options
+//     path: '.pagination__next',
+//     append: '.gallery-item',
+//     status: '.scroller-status',
+//     history: false,
+//     scrollThreshold: 100,
+//   });
+//   infScroll.pageIndex = 1;
+
+//   console.log(infScroll);
+
+//   infScroll.on('scrollThreshold', scrolling);
+// });
 
 searchForm.addEventListener('submit', async e => {
   e.preventDefault();
@@ -23,6 +44,8 @@ searchForm.addEventListener('submit', async e => {
     const data = await fetchImages(searchInputvalue, page);
     if (data.hits.length !== 0) {
       renderGallery(data.hits);
+      lastImage = gallery.lastChild;
+      // observer.observe(gallery.lastChild);
       return;
     }
     Notiflix.Notify.warning(
@@ -98,3 +121,54 @@ function renderGallery(arrayOfObjects) {
     captionDelay: 250,
   });
 }
+
+// let infScroll = new InfiniteScroll(document.body, {
+//   // options
+//   path: '.pagination__next',
+//   append: '.gallery-item',
+//   status: '.scroller-status',
+//   history: false,
+//   scrollThreshold: 100,
+// });
+
+// infScroll.on('scrollThreshold', scrolling);
+
+// let ias = new InfiniteAjaxScroll('.gallery-content', {
+//   item: '.gallery-item',
+//   next: '.next',
+//   pagination: '.pagination',
+// });
+
+async function scrolling() {
+  page += 1;
+  console.log('it works');
+
+  try {
+    const data = await fetchImages(currentQuery, page);
+
+    if (data.hits.length !== 0) {
+      renderGallery(data.hits);
+
+      return;
+    }
+    Notiflix.Notify.warning(
+      'Sorry, these are the last images matching your search query. Please try to search something else.'
+    );
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// observer.observe(trigger);
+
+window.addEventListener('scroll', () => {
+  // console.log(window.scrollY); //scrolled from top
+  // console.log(window.innerHeight); //visible part of screen
+  if (
+    window.scrollY + window.innerHeight >=
+    document.documentElement.scrollHeight - 100
+  ) {
+    console.log('this thing');
+    scrolling();
+  }
+});

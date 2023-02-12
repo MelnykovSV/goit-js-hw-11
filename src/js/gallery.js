@@ -3,6 +3,7 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import Notiflix from 'notiflix';
 import InfiniteAjaxScroll from '@webcreate/infinite-ajax-scroll';
+const throttle = require('lodash.throttle');
 
 let page = 1;
 let currentQuery;
@@ -148,7 +149,10 @@ async function scrolling() {
 
     if (data.hits.length !== 0) {
       renderGallery(data.hits);
-
+      window.scrollBy({
+        top: 300 * 2,
+        behavior: 'smooth',
+      });
       return;
     }
     Notiflix.Notify.warning(
@@ -161,14 +165,26 @@ async function scrolling() {
 
 // observer.observe(trigger);
 
-window.addEventListener('scroll', () => {
-  // console.log(window.scrollY); //scrolled from top
-  // console.log(window.innerHeight); //visible part of screen
-  if (
-    window.scrollY + window.innerHeight >=
-    document.documentElement.scrollHeight - 100
-  ) {
-    console.log('this thing');
-    scrolling();
-  }
-});
+window.addEventListener(
+  'scroll',
+  throttle(() => {
+    // console.log(window.scrollY); //scrolled from top
+    // console.log(window.innerHeight); //visible part of screen
+    if (
+      window.scrollY + window.innerHeight >=
+      document.documentElement.scrollHeight - 500
+    ) {
+      console.log('this thing');
+      scrolling();
+    }
+  }, 1000)
+);
+
+const { height: cardHeight } = document
+  .querySelector('.gallery-content')
+  .firstElementChild.getBoundingClientRect();
+
+// window.scrollBy({
+//   top: 300 * 2,
+//   behavior: 'smooth',
+// });

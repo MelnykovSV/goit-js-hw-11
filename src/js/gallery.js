@@ -17,8 +17,10 @@ const searchForm = document.querySelector('.search-form');
 const loadMoreButton = document.querySelector('.load-more');
 // const infScrollButton = document.querySelector('.infScroll');
 const trigger = document.querySelector('.lds-roller');
-
 trigger.classList.add('visually-hidden');
+// trigger.classList.add('visually-hidden');
+// trigger.classList.add('visually-hidden');
+// trigger.classList.add('visually-hidden');
 
 // infScrollButton.addEventListener('click', () => {
 //   infScroll = new InfiniteScroll(document.body, {
@@ -54,13 +56,12 @@ searchForm.addEventListener('submit', async e => {
   window.removeEventListener('scroll', handler);
 
   try {
-    trigger.style.visibility = 'visible';
     const data = await fetchImages(searchInputvalue, page);
     console.log(data);
     if (data.hits.length !== 0) {
       renderGallery(data.hits);
       lastImage = gallery.lastChild;
-      trigger.style.visibility = 'hidden';
+
       window.addEventListener('scroll', handler);
       return;
     }
@@ -74,12 +75,14 @@ searchForm.addEventListener('submit', async e => {
 
 loadMoreButton.addEventListener('click', async e => {
   e.preventDefault();
+  trigger.classList.remove('visually-hidden');
   page += 1;
   try {
     const data = await fetchImages(currentQuery, page);
 
     if (data.hits.length !== 0) {
       renderGallery(data.hits);
+      trigger.classList.add('visually-hidden');
       return;
     }
     Notiflix.Notify.warning(
@@ -141,6 +144,7 @@ function renderGallery(arrayOfObjects) {
 async function scrolling() {
   page += 1;
   console.log('it works');
+  trigger.classList.remove('visually-hidden');
 
   try {
     const data = await fetchImages(currentQuery, page);
@@ -151,6 +155,7 @@ async function scrolling() {
         top: 300 * 2,
         behavior: 'smooth',
       });
+      trigger.classList.add('visually-hidden');
       return;
     }
     window.removeEventListener('scroll', handler);
@@ -159,6 +164,9 @@ async function scrolling() {
     );
   } catch (error) {
     console.log(error);
+
+    trigger.classList.add('visually-hidden');
+
     window.removeEventListener('scroll', handler);
   }
 }
@@ -184,6 +192,6 @@ function scrollDetect() {
   }
 }
 
-const { height: cardHeight } = document
-  .querySelector('.gallery-content')
-  .firstElementChild.getBoundingClientRect();
+// const { height: cardHeight } = document
+//   .querySelector('.gallery-content')
+//   .firstElementChild.getBoundingClientRect();

@@ -8,14 +8,10 @@ const throttle = require('lodash.throttle');
 let page = 1;
 let currentQuery;
 
-let lastImage;
-
 const gallery = document.querySelector('.gallery-content');
 const searchForm = document.querySelector('.search-form');
 const loadMoreButton = document.querySelector('.load-more');
-
 const trigger = document.querySelector('.lds-roller');
-
 const handler = throttle(function () {
   if (
     window.scrollY + window.innerHeight >=
@@ -25,7 +21,7 @@ const handler = throttle(function () {
   }
 }, 1000);
 
-window.addEventListener('scroll', handler);
+// window.addEventListener('scroll', handler);
 
 const lightboxGallery = new SimpleLightbox('.gallery-content a', {
   captionsData: 'alt',
@@ -40,12 +36,12 @@ searchForm.addEventListener('submit', async e => {
   const searchInputvalue = e.currentTarget.querySelector('input').value;
 
   currentQuery = e.currentTarget.querySelector('input').value;
+  window.addEventListener('scroll', handler);
 
   try {
     const data = await fetchImages(searchInputvalue, page);
     if (data.hits.length !== 0) {
       renderGallery(data.hits);
-      lastImage = gallery.lastChild;
       return;
     }
     Notiflix.Notify.warning(

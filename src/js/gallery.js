@@ -153,16 +153,3 @@ const handler = throttle(function () {
 }, 1000);
 
 window.addEventListener('scroll', handler);
-
-function scrollDetect() {
-  if (
-    window.scrollY + window.innerHeight >=
-    document.documentElement.scrollHeight - 500
-  ) {
-    scrolling();
-  }
-}
-
-// const { height: cardHeight } = document
-//   .querySelector('.gallery-content')
-//   .firstElementChild.getBoundingClientRect();

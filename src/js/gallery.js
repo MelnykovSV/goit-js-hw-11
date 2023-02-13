@@ -16,7 +16,9 @@ const gallery = document.querySelector('.gallery-content');
 const searchForm = document.querySelector('.search-form');
 const loadMoreButton = document.querySelector('.load-more');
 // const infScrollButton = document.querySelector('.infScroll');
-const trigger = document.querySelector('.pagination');
+const trigger = document.querySelector('.lds-roller');
+
+trigger.classList.add('visually-hidden');
 
 // infScrollButton.addEventListener('click', () => {
 //   infScroll = new InfiniteScroll(document.body, {
@@ -39,7 +41,6 @@ const trigger = document.querySelector('.pagination');
 // });
 
 // trigger.style.visibility = 'hidden';
-lv.updateBar(type, barElement, newValue, maxValue);
 
 searchForm.addEventListener('submit', async e => {
   e.preventDefault();

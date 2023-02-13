@@ -43,14 +43,13 @@ searchForm.addEventListener('submit', async e => {
 
   window.removeEventListener('scroll', handler);
 
-  window.addEventListener('scroll', handler);
-
   try {
     const data = await fetchImages(searchInputvalue, page);
     if (data.hits.length !== 0) {
       renderGallery(data.hits);
       lastImage = gallery.lastChild;
       // observer.observe(gallery.lastChild);
+      window.addEventListener('scroll', handler);
       return;
     }
     Notiflix.Notify.warning(
@@ -127,23 +126,6 @@ function renderGallery(arrayOfObjects) {
   });
 }
 
-// let infScroll = new InfiniteScroll(document.body, {
-//   // options
-//   path: '.pagination__next',
-//   append: '.gallery-item',
-//   status: '.scroller-status',
-//   history: false,
-//   scrollThreshold: 100,
-// });
-
-// infScroll.on('scrollThreshold', scrolling);
-
-// let ias = new InfiniteAjaxScroll('.gallery-content', {
-//   item: '.gallery-item',
-//   next: '.next',
-//   pagination: '.pagination',
-// });
-
 async function scrolling() {
   page += 1;
   console.log('it works');
@@ -153,10 +135,10 @@ async function scrolling() {
 
     if (data.hits.length !== 0) {
       renderGallery(data.hits);
-      // window.scrollBy({
-      //   top: 300 * 2,
-      //   behavior: 'smooth',
-      // });
+      window.scrollBy({
+        top: 300 * 2,
+        behavior: 'smooth',
+      });
       return;
     }
     window.removeEventListener('scroll', handler);

@@ -3,6 +3,8 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import Notiflix from 'notiflix';
 import InfiniteAjaxScroll from '@webcreate/infinite-ajax-scroll';
+import { Loading } from 'notiflix/build/notiflix-loading-aio';
+
 const throttle = require('lodash.throttle');
 
 let page = 1;
@@ -14,7 +16,7 @@ const gallery = document.querySelector('.gallery-content');
 const searchForm = document.querySelector('.search-form');
 const loadMoreButton = document.querySelector('.load-more');
 // const infScrollButton = document.querySelector('.infScroll');
-// const trigger = document.querySelector('.pagination');
+const trigger = document.querySelector('.pagination');
 
 // infScrollButton.addEventListener('click', () => {
 //   infScroll = new InfiniteScroll(document.body, {
@@ -32,6 +34,13 @@ const loadMoreButton = document.querySelector('.load-more');
 //   infScroll.on('scrollThreshold', scrolling);
 // });
 
+// window.addEventListener('load', () => {
+//   trigger.style.visibility = 'hidden';
+// });
+
+// trigger.style.visibility = 'hidden';
+lv.updateBar(type, barElement, newValue, maxValue);
+
 searchForm.addEventListener('submit', async e => {
   e.preventDefault();
   gallery.innerHTML = '';
@@ -44,11 +53,13 @@ searchForm.addEventListener('submit', async e => {
   window.removeEventListener('scroll', handler);
 
   try {
+    trigger.style.visibility = 'visible';
     const data = await fetchImages(searchInputvalue, page);
+    console.log(data);
     if (data.hits.length !== 0) {
       renderGallery(data.hits);
       lastImage = gallery.lastChild;
-      // observer.observe(gallery.lastChild);
+      trigger.style.visibility = 'hidden';
       window.addEventListener('scroll', handler);
       return;
     }
@@ -162,19 +173,6 @@ const handler = throttle(function () {
 }, 1000);
 
 window.addEventListener('scroll', handler);
-
-// window.removeEventListener('scroll', throttle(scrollDetect, 1000));
-
-// function thisFunction() {
-//   return throttle(() => {
-//     if (
-//       window.scrollY + window.innerHeight >=
-//       document.documentElement.scrollHeight - 500
-//     ) {
-//       scrolling();
-//     }
-//   }, 1000);
-// }
 
 function scrollDetect() {
   if (

@@ -16,6 +16,22 @@ const loadMoreButton = document.querySelector('.load-more');
 
 const trigger = document.querySelector('.lds-roller');
 
+const handler = throttle(function () {
+  if (
+    window.scrollY + window.innerHeight >=
+    document.documentElement.scrollHeight - 500
+  ) {
+    scrolling();
+  }
+}, 1000);
+
+window.addEventListener('scroll', handler);
+
+const lightboxGallery = new SimpleLightbox('.gallery-content a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
+
 searchForm.addEventListener('submit', async e => {
   e.preventDefault();
   gallery.innerHTML = '';
@@ -25,16 +41,11 @@ searchForm.addEventListener('submit', async e => {
 
   currentQuery = e.currentTarget.querySelector('input').value;
 
-  window.removeEventListener('scroll', handler);
-
   try {
     const data = await fetchImages(searchInputvalue, page);
-    console.log(data);
     if (data.hits.length !== 0) {
       renderGallery(data.hits);
       lastImage = gallery.lastChild;
-
-      window.addEventListener('scroll', handler);
       return;
     }
     Notiflix.Notify.warning(
@@ -44,6 +55,8 @@ searchForm.addEventListener('submit', async e => {
     console.log(error);
   }
 });
+
+///More images on click
 
 loadMoreButton.addEventListener('click', async e => {
   e.preventDefault();
@@ -107,16 +120,13 @@ function renderGallery(arrayOfObjects) {
 
   gallery.insertAdjacentHTML('beforeend', markup);
 
-  const lightboxGallery = new SimpleLightbox('.gallery-content a', {
-    captionsData: 'alt',
-    captionDelay: 250,
-  });
+  lightboxGallery.refresh();
 }
 
 async function scrolling() {
   page += 1;
-  console.log('it works');
   trigger.classList.remove('visually-hidden');
+  window.removeEventListener('scroll', handler);
 
   try {
     const data = await fetchImages(currentQuery, page);
@@ -128,6 +138,7 @@ async function scrolling() {
         behavior: 'smooth',
       });
       trigger.classList.add('visually-hidden');
+      window.addEventListener('scroll', handler);
       return;
     }
     window.removeEventListener('scroll', handler);
@@ -142,14 +153,3 @@ async function scrolling() {
     window.removeEventListener('scroll', handler);
   }
 }
-
-const handler = throttle(function () {
-  if (
-    window.scrollY + window.innerHeight >=
-    document.documentElement.scrollHeight - 500
-  ) {
-    scrolling();
-  }
-}, 1000);
-
-window.addEventListener('scroll', handler);

@@ -2,8 +2,6 @@ import { fetchImages } from './fetchImages';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import Notiflix from 'notiflix';
-import InfiniteAjaxScroll from '@webcreate/infinite-ajax-scroll';
-import { Loading } from 'notiflix/build/notiflix-loading-aio';
 
 const throttle = require('lodash.throttle');
 
@@ -15,34 +13,8 @@ let lastImage;
 const gallery = document.querySelector('.gallery-content');
 const searchForm = document.querySelector('.search-form');
 const loadMoreButton = document.querySelector('.load-more');
-// const infScrollButton = document.querySelector('.infScroll');
+
 const trigger = document.querySelector('.lds-roller');
-trigger.classList.add('visually-hidden');
-// trigger.classList.add('visually-hidden');
-// trigger.classList.add('visually-hidden');
-// trigger.classList.add('visually-hidden');
-
-// infScrollButton.addEventListener('click', () => {
-//   infScroll = new InfiniteScroll(document.body, {
-//     // options
-//     path: '.pagination__next',
-//     append: '.gallery-item',
-//     status: '.scroller-status',
-//     history: false,
-//     scrollThreshold: 100,
-//   });
-//   infScroll.pageIndex = 1;
-
-//   console.log(infScroll);
-
-//   infScroll.on('scrollThreshold', scrolling);
-// });
-
-// window.addEventListener('load', () => {
-//   trigger.style.visibility = 'hidden';
-// });
-
-// trigger.style.visibility = 'hidden';
 
 searchForm.addEventListener('submit', async e => {
   e.preventDefault();
@@ -171,7 +143,6 @@ async function scrolling() {
   }
 }
 
-// observer.observe(trigger);
 const handler = throttle(function () {
   if (
     window.scrollY + window.innerHeight >=

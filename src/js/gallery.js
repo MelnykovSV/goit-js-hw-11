@@ -41,6 +41,10 @@ searchForm.addEventListener('submit', async e => {
 
   currentQuery = e.currentTarget.querySelector('input').value;
 
+  window.removeEventListener('scroll', handler);
+
+  window.addEventListener('scroll', handler);
+
   try {
     const data = await fetchImages(searchInputvalue, page);
     if (data.hits.length !== 0) {
@@ -149,42 +153,56 @@ async function scrolling() {
 
     if (data.hits.length !== 0) {
       renderGallery(data.hits);
-      window.scrollBy({
-        top: 300 * 2,
-        behavior: 'smooth',
-      });
+      // window.scrollBy({
+      //   top: 300 * 2,
+      //   behavior: 'smooth',
+      // });
       return;
     }
+    window.removeEventListener('scroll', handler);
     Notiflix.Notify.warning(
       'Sorry, these are the last images matching your search query. Please try to search something else.'
     );
   } catch (error) {
     console.log(error);
+    window.removeEventListener('scroll', handler);
   }
 }
 
 // observer.observe(trigger);
+const handler = throttle(function () {
+  if (
+    window.scrollY + window.innerHeight >=
+    document.documentElement.scrollHeight - 500
+  ) {
+    scrolling();
+  }
+}, 1000);
 
-window.addEventListener(
-  'scroll',
-  throttle(() => {
-    // console.log(window.scrollY); //scrolled from top
-    // console.log(window.innerHeight); //visible part of screen
-    if (
-      window.scrollY + window.innerHeight >=
-      document.documentElement.scrollHeight - 500
-    ) {
-      console.log('this thing');
-      scrolling();
-    }
-  }, 1000)
-);
+window.addEventListener('scroll', handler);
+
+// window.removeEventListener('scroll', throttle(scrollDetect, 1000));
+
+// function thisFunction() {
+//   return throttle(() => {
+//     if (
+//       window.scrollY + window.innerHeight >=
+//       document.documentElement.scrollHeight - 500
+//     ) {
+//       scrolling();
+//     }
+//   }, 1000);
+// }
+
+function scrollDetect() {
+  if (
+    window.scrollY + window.innerHeight >=
+    document.documentElement.scrollHeight - 500
+  ) {
+    scrolling();
+  }
+}
 
 const { height: cardHeight } = document
   .querySelector('.gallery-content')
   .firstElementChild.getBoundingClientRect();
-
-// window.scrollBy({
-//   top: 300 * 2,
-//   behavior: 'smooth',
-// });

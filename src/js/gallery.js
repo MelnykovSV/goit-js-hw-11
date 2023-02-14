@@ -43,8 +43,8 @@ searchForm.addEventListener('submit', async e => {
     const data = await fetchImages(searchInputvalue, page);
     if (data.hits.length !== 0) {
       renderGallery(data.hits);
-      console.log(data.totalHits);
-      totalHits = data.totalHits;
+      // console.log(data.totalHits);
+      // totalHits = data.totalHits;
       window.addEventListener('scroll', infiniteScrollHandler);
       return;
     }

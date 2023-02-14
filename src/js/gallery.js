@@ -9,7 +9,7 @@ let currentQuery;
 const throttle = require('lodash.throttle');
 const gallery = document.querySelector('.gallery-content');
 const searchForm = document.querySelector('.search-form');
-const trigger = document.querySelector('.lds-roller');
+const spinner = document.querySelector('.lds-roller');
 const lightboxGallery = new SimpleLightbox('.gallery-content a', {
   captionsData: 'alt',
   captionDelay: 250,
@@ -34,12 +34,11 @@ searchForm.addEventListener('submit', async e => {
   gallery.innerHTML = '';
   page = 1;
 
-  const searchInputValue = e.currentTarget.querySelector('input').value;
-
   currentQuery = e.currentTarget.querySelector('input').value;
+  e.currentTarget.reset();
 
   try {
-    const data = await fetchImages(searchInputValue, page);
+    const data = await fetchImages(currentQuery, page);
     if (data.hits.length !== 0) {
       renderGallery(data.hits);
 
@@ -53,28 +52,6 @@ searchForm.addEventListener('submit', async e => {
     console.log(error);
   }
 });
-
-///More images on click
-
-// loadMoreButton.addEventListener('click', async e => {
-//   e.preventDefault();
-//   trigger.classList.remove('visually-hidden');
-//   page += 1;
-//   try {
-//     const data = await fetchImages(currentQuery, page);
-
-//     if (data.hits.length !== 0) {
-//       renderGallery(data.hits);
-//       trigger.classList.add('visually-hidden');
-//       return;
-//     }
-//     Notiflix.Notify.warning(
-//       'Sorry, these are the last images matching your search query. Please try to search something else.'
-//     );
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
 
 //renders gallery
 
@@ -133,10 +110,10 @@ async function scrolling() {
     return;
   }
 
-  trigger.classList.remove('visually-hidden');
+  spinner.classList.remove('visually-hidden');
   window.removeEventListener('scroll', infiniteScrollHandler);
 
-  //fires if fetch results in non-blank array
+  //fires if fetch results in non-empty array
   try {
     const data = await fetchImages(currentQuery, page);
 
@@ -147,14 +124,14 @@ async function scrolling() {
         top: 200 * 2,
         behavior: 'smooth',
       });
-      trigger.classList.add('visually-hidden');
+      spinner.classList.add('visually-hidden');
       window.addEventListener('scroll', infiniteScrollHandler);
       return;
     }
 
-    //fires if fetch results in blank array
+    //fires if fetch results in empty array
     window.removeEventListener('scroll', infiniteScrollHandler);
-    trigger.classList.add('visually-hidden');
+    spinner.classList.add('visually-hidden');
     Notiflix.Notify.warning(
       'Sorry, these are the last images matching your search query. Please try to search something else.'
     );
@@ -163,7 +140,7 @@ async function scrolling() {
 
     console.log(error);
 
-    trigger.classList.add('visually-hidden');
+    spinner.classList.add('visually-hidden');
 
     window.removeEventListener('scroll', infiniteScrollHandler);
   }

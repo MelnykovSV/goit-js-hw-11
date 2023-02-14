@@ -3,11 +3,10 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import Notiflix from 'notiflix';
 
-const throttle = require('lodash.throttle');
-
 let page = 1;
 let currentQuery;
 
+const throttle = require('lodash.throttle');
 const gallery = document.querySelector('.gallery-content');
 const searchForm = document.querySelector('.search-form');
 const loadMoreButton = document.querySelector('.load-more');
@@ -21,8 +20,6 @@ const handler = throttle(function () {
   }
 }, 1000);
 
-// window.addEventListener('scroll', handler);
-
 const lightboxGallery = new SimpleLightbox('.gallery-content a', {
   captionsData: 'alt',
   captionDelay: 250,
@@ -30,18 +27,19 @@ const lightboxGallery = new SimpleLightbox('.gallery-content a', {
 
 searchForm.addEventListener('submit', async e => {
   e.preventDefault();
+  window.removeEventListener('scroll', handler);
   gallery.innerHTML = '';
   page = 1;
 
   const searchInputvalue = e.currentTarget.querySelector('input').value;
 
   currentQuery = e.currentTarget.querySelector('input').value;
-  window.addEventListener('scroll', handler);
 
   try {
     const data = await fetchImages(searchInputvalue, page);
     if (data.hits.length !== 0) {
       renderGallery(data.hits);
+      window.addEventListener('scroll', handler);
       return;
     }
     Notiflix.Notify.warning(

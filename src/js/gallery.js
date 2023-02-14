@@ -9,7 +9,6 @@ let currentQuery;
 const throttle = require('lodash.throttle');
 const gallery = document.querySelector('.gallery-content');
 const searchForm = document.querySelector('.search-form');
-// const loadMoreButton = document.querySelector('.load-more');
 const trigger = document.querySelector('.lds-roller');
 const lightboxGallery = new SimpleLightbox('.gallery-content a', {
   captionsData: 'alt',
@@ -35,16 +34,15 @@ searchForm.addEventListener('submit', async e => {
   gallery.innerHTML = '';
   page = 1;
 
-  const searchInputvalue = e.currentTarget.querySelector('input').value;
+  const searchInputValue = e.currentTarget.querySelector('input').value;
 
   currentQuery = e.currentTarget.querySelector('input').value;
 
   try {
-    const data = await fetchImages(searchInputvalue, page);
+    const data = await fetchImages(searchInputValue, page);
     if (data.hits.length !== 0) {
       renderGallery(data.hits);
-      // console.log(data.totalHits);
-      // totalHits = data.totalHits;
+
       window.addEventListener('scroll', infiniteScrollHandler);
       return;
     }
@@ -144,7 +142,6 @@ async function scrolling() {
 
     if (data.hits.length !== 0) {
       renderGallery(data.hits);
-      console.log(data.hits.length);
       Notiflix.Notify.success(`Hooray! We found ${data.hits.length} images.`);
       window.scrollBy({
         top: 200 * 2,

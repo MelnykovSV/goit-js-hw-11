@@ -5,7 +5,6 @@ import Notiflix from 'notiflix';
 
 let page = 1;
 let currentQuery;
-let totalHits;
 
 const throttle = require('lodash.throttle');
 const gallery = document.querySelector('.gallery-content');
@@ -126,6 +125,8 @@ function renderGallery(arrayOfObjects) {
 
 async function scrolling() {
   page += 1;
+
+  //Checking for maximum pages number
   if (page === 14) {
     Notiflix.Notify.warning(
       'Sorry, these are the last images matching your search query. Please try to search something else.'
@@ -133,9 +134,11 @@ async function scrolling() {
     window.removeEventListener('scroll', infiniteScrollHandler);
     return;
   }
+
   trigger.classList.remove('visually-hidden');
   window.removeEventListener('scroll', infiniteScrollHandler);
 
+  //fires if fetch results in non-blank array
   try {
     const data = await fetchImages(currentQuery, page);
 
@@ -151,12 +154,16 @@ async function scrolling() {
       window.addEventListener('scroll', infiniteScrollHandler);
       return;
     }
+
+    //fires if fetch results in blank array
     window.removeEventListener('scroll', infiniteScrollHandler);
     trigger.classList.add('visually-hidden');
     Notiflix.Notify.warning(
       'Sorry, these are the last images matching your search query. Please try to search something else.'
     );
   } catch (error) {
+    //fires in case of error
+
     console.log(error);
 
     trigger.classList.add('visually-hidden');

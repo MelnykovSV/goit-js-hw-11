@@ -30,11 +30,18 @@ const infiniteScrollHandler = throttle(function () {
 
 searchForm.addEventListener('submit', async e => {
   e.preventDefault();
+
+  currentQuery = e.currentTarget.querySelector('input').value.trim();
+
+  if (!currentQuery) {
+    Notiflix.Notify.failure('Enter valid value!');
+    return;
+  }
+
   window.removeEventListener('scroll', infiniteScrollHandler);
   gallery.innerHTML = '';
   page = 1;
 
-  currentQuery = e.currentTarget.querySelector('input').value;
   e.currentTarget.reset();
 
   try {

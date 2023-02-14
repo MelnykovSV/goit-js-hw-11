@@ -11,23 +11,27 @@ const gallery = document.querySelector('.gallery-content');
 const searchForm = document.querySelector('.search-form');
 const loadMoreButton = document.querySelector('.load-more');
 const trigger = document.querySelector('.lds-roller');
-const handler = throttle(function () {
-  if (
-    window.scrollY + window.innerHeight >=
-    document.documentElement.scrollHeight - 500
-  ) {
-    scrolling();
-  }
-}, 1000);
-
 const lightboxGallery = new SimpleLightbox('.gallery-content a', {
   captionsData: 'alt',
   captionDelay: 250,
 });
 
+//Detects scrolling to the end of the page
+
+const infiniteScrollHandler = throttle(function () {
+  if (
+    window.scrollY + window.innerHeight >=
+    document.documentElement.scrollHeight - 300
+  ) {
+    scrolling();
+  }
+}, 1000);
+
+///First pack of images
+
 searchForm.addEventListener('submit', async e => {
   e.preventDefault();
-  window.removeEventListener('scroll', handler);
+  window.removeEventListener('scroll', infiniteScrollHandler);
   gallery.innerHTML = '';
   page = 1;
 
@@ -39,7 +43,7 @@ searchForm.addEventListener('submit', async e => {
     const data = await fetchImages(searchInputvalue, page);
     if (data.hits.length !== 0) {
       renderGallery(data.hits);
-      window.addEventListener('scroll', handler);
+      window.addEventListener('scroll', infiniteScrollHandler);
       return;
     }
     Notiflix.Notify.warning(
@@ -120,7 +124,7 @@ function renderGallery(arrayOfObjects) {
 async function scrolling() {
   page += 1;
   trigger.classList.remove('visually-hidden');
-  window.removeEventListener('scroll', handler);
+  window.removeEventListener('scroll', infiniteScrollHandler);
 
   try {
     const data = await fetchImages(currentQuery, page);
@@ -132,10 +136,10 @@ async function scrolling() {
         behavior: 'smooth',
       });
       trigger.classList.add('visually-hidden');
-      window.addEventListener('scroll', handler);
+      window.addEventListener('scroll', infiniteScrollHandler);
       return;
     }
-    window.removeEventListener('scroll', handler);
+    window.removeEventListener('scroll', infiniteScrollHandler);
     Notiflix.Notify.warning(
       'Sorry, these are the last images matching your search query. Please try to search something else.'
     );
@@ -144,6 +148,6 @@ async function scrolling() {
 
     trigger.classList.add('visually-hidden');
 
-    window.removeEventListener('scroll', handler);
+    window.removeEventListener('scroll', infiniteScrollHandler);
   }
 }

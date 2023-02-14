@@ -144,7 +144,7 @@ async function scrolling() {
       console.log(data.hits.length);
       Notiflix.Notify.success(`Hooray! We found ${data.hits.length} images.`);
       window.scrollBy({
-        top: 300 * 2,
+        top: 200 * 2,
         behavior: 'smooth',
       });
       trigger.classList.add('visually-hidden');

@@ -48,5 +48,16 @@ export function renderGallery(arrayOfObjects) {
 
   gallery.insertAdjacentHTML('beforeend', markup);
 
-  lightboxGallery.refresh();
+  if (!lightboxGallery.isOpen) {
+    console.log('closed');
+    console.log(lightboxGallery);
+    lightboxGallery.refresh();
+  }
+  if (lightboxGallery.isOpen) {
+    lightboxGallery.on('closed.simplelightbox', () => {
+      console.log('opened');
+      console.log(lightboxGallery);
+      lightboxGallery.refresh();
+    });
+  }
 }

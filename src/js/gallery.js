@@ -1,12 +1,18 @@
 import { fetchImages } from './fetchImages';
-import { renderGallery } from './renderGallery';
+import { lightboxGallery, renderGallery } from './renderGallery';
 // import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import Notiflix from 'notiflix';
+import SimpleLightbox from 'simplelightbox';
 
 let page = 1;
 let currentQuery;
 let totalPages;
+
+// const lightboxGallery = new SimpleLightbox('.gallery-content a', {
+//   captionsData: 'alt',
+//   captionDelay: 250,
+// });
 
 const MAX_PAGES = 13;
 const throttle = require('lodash.throttle');
@@ -61,6 +67,11 @@ searchForm.addEventListener('submit', async e => {
         }
         // foundPicsNumber = 520;
         renderGallery(data.hits);
+        // lightboxGallery.refresh();
+        // lightboxGallery.on('closed.simplelightbox', () => {
+        //   console.log('listener is still working');
+        //   lightboxGallery.refresh();
+        // });
         console.log(data);
         window.addEventListener('scroll', infiniteScrollHandler);
         totalPages = 13;

@@ -5,6 +5,8 @@ import Notiflix from 'notiflix';
 
 let page = 1;
 let currentQuery;
+let totalPages;
+// let foundPicsNumber;
 
 const throttle = require('lodash.throttle');
 const gallery = document.querySelector('.gallery-content');
@@ -47,9 +49,31 @@ searchForm.addEventListener('submit', async e => {
   try {
     const data = await fetchImages(currentQuery, page);
     if (data.hits.length !== 0) {
-      renderGallery(data.hits);
+      if (data.totalHits >= 500) {
+        if (data.total.length < 520) {
+          // foundPicsNumber = data.total.length;
+          renderGallery(data.hits);
+          console.log(data);
+          window.addEventListener('scroll', infiniteScrollHandler);
+          Notiflix.Notify.success(
+            `Hooray! We found ${data.total.length} images.`
+          );
+          return;
+        }
+        // foundPicsNumber = 520;
+        renderGallery(data.hits);
+        console.log(data);
+        window.addEventListener('scroll', infiniteScrollHandler);
+        Notiflix.Notify.success(`Hooray! We found 520 images.`);
+        return;
+      }
 
+      // foundPicsNumber = data.hits.length;
+      renderGallery(data.hits);
+      console.log(data);
+      console.log(data.totalHits);
       window.addEventListener('scroll', infiniteScrollHandler);
+      Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
       return;
     }
     Notiflix.Notify.warning(

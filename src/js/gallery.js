@@ -7,7 +7,6 @@ let page = 1;
 let currentQuery;
 let totalPages;
 
-const MAX_PAGES = 13;
 const throttle = require('lodash.throttle');
 export const gallery = document.querySelector('.gallery-content');
 const searchForm = document.querySelector('.search-form');

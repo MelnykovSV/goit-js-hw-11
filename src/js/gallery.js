@@ -1,5 +1,5 @@
 import { fetchImages } from './fetchImages';
-import { lightboxGallery, renderGallery } from './renderGallery';
+import { renderGallery } from './renderGallery';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import Notiflix from 'notiflix';
 

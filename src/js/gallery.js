@@ -43,38 +43,36 @@ searchForm.addEventListener('submit', async e => {
 
   try {
     const data = await fetchImages(currentQuery, page);
+
     if (data.hits.length !== 0) {
+      renderGallery(data.hits);
+      window.addEventListener('scroll', infiniteScrollHandler);
+
       if (data.totalHits >= 500) {
+        /// 500-519 hits
+
         if (data.total.length < 520) {
-          renderGallery(data.hits);
-          console.log(data);
-          window.addEventListener('scroll', infiniteScrollHandler);
           totalPages = Math.ceil(data.total.length / 40);
-          console.log(`Total pages: ${totalPages}`);
           Notiflix.Notify.success(
             `Hooray! We found ${data.total.length} images.`
           );
           return;
         }
-        renderGallery(data.hits);
 
-        console.log(data);
-        window.addEventListener('scroll', infiniteScrollHandler);
+        /// 520+ hits
+
         totalPages = 13;
-        console.log(`Total pages: ${totalPages}`);
         Notiflix.Notify.success(`Hooray! We found 520 images.`);
         return;
       }
 
-      renderGallery(data.hits);
-      console.log(data);
-      console.log(data.totalHits);
-      window.addEventListener('scroll', infiniteScrollHandler);
+      /// 1-499 hits
+
       totalPages = Math.ceil(data.totalHits / 40);
-      console.log(`Total pages: ${totalPages}`);
       Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
       return;
     }
+
     Notiflix.Notify.warning(
       'Sorry, there are no images matching your search query. Please try again.'
     );

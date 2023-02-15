@@ -1,9 +1,7 @@
 import { gallery } from './gallery';
-// import { lightboxGallery } from './gallery';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-// export const gallery = document.querySelector('.gallery-content');
 export const lightboxGallery = new SimpleLightbox('.gallery-content a', {
   captionsData: 'alt',
   captionDelay: 250,

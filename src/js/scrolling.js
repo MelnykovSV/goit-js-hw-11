@@ -1,3 +1,11 @@
+import { page } from './gallery';
+
+export function testFunc() {
+  console.log(page);
+  page += 1;
+  console.log(page);
+}
+
 // export async function scrolling() {
 //   page += 1;
 

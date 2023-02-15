@@ -3,16 +3,40 @@ import { renderGallery } from './renderGallery';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import Notiflix from 'notiflix';
 
-let page = 1;
+import { testFunc } from './scrolling';
+
+// let page = 1;
 let currentQuery;
-let totalPages;
+// let totalPages;
 
 const throttle = require('lodash.throttle');
 export const gallery = document.querySelector('.gallery-content');
 const searchForm = document.querySelector('.search-form');
-const spinner = document.querySelector('.lds-roller');
+// const spinner = document.querySelector('.lds-roller');
 
 //Detects scrolling to the end of the page
+
+// ===============================REPLACE===============================
+global.page = 1;
+export let totalPages;
+export const spinner = document.querySelector('.lds-roller');
+
+// function testFunc1(pag) {
+//   pag += 1;
+//   console.log(pag);
+//   return pag
+// }
+
+// function testFunc() {
+//   console.log(page);
+//   page += 1;
+//   console.log(page);
+// }
+
+testFunc();
+// console.log(page);
+testFunc();
+// console.log(page);
 
 const infiniteScrollHandler = throttle(function () {
   if (
@@ -22,6 +46,45 @@ const infiniteScrollHandler = throttle(function () {
     scrolling();
   }
 }, 1000);
+
+async function scrolling() {
+  page += 1;
+
+  spinner.classList.remove('visually-hidden');
+  window.removeEventListener('scroll', infiniteScrollHandler);
+
+  //fires if fetch results in non-empty array
+  try {
+    const data = await fetchImages(currentQuery, page);
+
+    if (data.hits.length !== 0) {
+      renderGallery(data.hits);
+      window.scrollBy({
+        top: 200 * 2,
+        behavior: 'smooth',
+      });
+      spinner.classList.add('visually-hidden');
+
+      if (page === totalPages) {
+        Notiflix.Notify.warning(
+          'Sorry, these are the last images matching your search query. Please try to search something else.'
+        );
+        return;
+      }
+
+      window.addEventListener('scroll', infiniteScrollHandler);
+      return;
+    }
+  } catch (error) {
+    console.log(error);
+
+    spinner.classList.add('visually-hidden');
+
+    window.removeEventListener('scroll', infiniteScrollHandler);
+  }
+}
+
+// ===============================REPLACE===============================
 
 ///First pack of images
 
@@ -80,40 +143,3 @@ searchForm.addEventListener('submit', async e => {
     console.log(error);
   }
 });
-
-async function scrolling() {
-  page += 1;
-
-  spinner.classList.remove('visually-hidden');
-  window.removeEventListener('scroll', infiniteScrollHandler);
-
-  //fires if fetch results in non-empty array
-  try {
-    const data = await fetchImages(currentQuery, page);
-
-    if (data.hits.length !== 0) {
-      renderGallery(data.hits);
-      window.scrollBy({
-        top: 200 * 2,
-        behavior: 'smooth',
-      });
-      spinner.classList.add('visually-hidden');
-
-      if (page === totalPages) {
-        Notiflix.Notify.warning(
-          'Sorry, these are the last images matching your search query. Please try to search something else.'
-        );
-        return;
-      }
-
-      window.addEventListener('scroll', infiniteScrollHandler);
-      return;
-    }
-  } catch (error) {
-    console.log(error);
-
-    spinner.classList.add('visually-hidden');
-
-    window.removeEventListener('scroll', infiniteScrollHandler);
-  }
-}

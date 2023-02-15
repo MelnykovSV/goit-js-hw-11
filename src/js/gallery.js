@@ -1,6 +1,5 @@
 import { fetchImages } from './fetchImages';
 import { renderGallery } from './renderGallery';
-// import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import Notiflix from 'notiflix';
 
@@ -8,7 +7,6 @@ let page = 1;
 let currentQuery;
 let totalPages;
 
-const MAX_PAGES = 13;
 const throttle = require('lodash.throttle');
 export const gallery = document.querySelector('.gallery-content');
 const searchForm = document.querySelector('.search-form');
@@ -45,40 +43,36 @@ searchForm.addEventListener('submit', async e => {
 
   try {
     const data = await fetchImages(currentQuery, page);
+
     if (data.hits.length !== 0) {
+      renderGallery(data.hits);
+      window.addEventListener('scroll', infiniteScrollHandler);
+
       if (data.totalHits >= 500) {
+        /// 500-519 hits
+
         if (data.total.length < 520) {
-          // foundPicsNumber = data.total.length;
-          renderGallery(data.hits);
-          console.log(data);
-          window.addEventListener('scroll', infiniteScrollHandler);
           totalPages = Math.ceil(data.total.length / 40);
-          console.log(`Total pages: ${totalPages}`);
           Notiflix.Notify.success(
             `Hooray! We found ${data.total.length} images.`
           );
           return;
         }
-        // foundPicsNumber = 520;
-        renderGallery(data.hits);
-        console.log(data);
-        window.addEventListener('scroll', infiniteScrollHandler);
+
+        /// 520+ hits
+
         totalPages = 13;
-        console.log(`Total pages: ${totalPages}`);
         Notiflix.Notify.success(`Hooray! We found 520 images.`);
         return;
       }
 
-      // foundPicsNumber = data.hits.length;
-      renderGallery(data.hits);
-      console.log(data);
-      console.log(data.totalHits);
-      window.addEventListener('scroll', infiniteScrollHandler);
+      /// 1-499 hits
+
       totalPages = Math.ceil(data.totalHits / 40);
-      console.log(`Total pages: ${totalPages}`);
       Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
       return;
     }
+
     Notiflix.Notify.warning(
       'Sorry, there are no images matching your search query. Please try again.'
     );
@@ -88,11 +82,7 @@ searchForm.addEventListener('submit', async e => {
 });
 
 async function scrolling() {
-  console.log(page);
   page += 1;
-  console.log(page);
-
-  //Checking for maximum pages number
 
   spinner.classList.remove('visually-hidden');
   window.removeEventListener('scroll', infiniteScrollHandler);
@@ -103,7 +93,6 @@ async function scrolling() {
 
     if (data.hits.length !== 0) {
       renderGallery(data.hits);
-      // Notiflix.Notify.success(`Hooray! We found ${data.hits.length} images.`);
       window.scrollBy({
         top: 200 * 2,
         behavior: 'smooth',

@@ -81,13 +81,14 @@ searchForm.addEventListener('submit', async e => {
   }
 });
 
+///Scrolling function
+
 async function scrolling() {
   page += 1;
 
   spinner.classList.remove('visually-hidden');
   window.removeEventListener('scroll', infiniteScrollHandler);
 
-  //fires if fetch results in non-empty array
   try {
     const data = await fetchImages(currentQuery, page);
 

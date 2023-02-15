@@ -8,6 +8,7 @@ let currentQuery;
 let totalPages;
 // let foundPicsNumber;
 
+const MAX_PAGES = 13;
 const throttle = require('lodash.throttle');
 const gallery = document.querySelector('.gallery-content');
 const searchForm = document.querySelector('.search-form');
@@ -55,6 +56,8 @@ searchForm.addEventListener('submit', async e => {
           renderGallery(data.hits);
           console.log(data);
           window.addEventListener('scroll', infiniteScrollHandler);
+          totalPages = Math.ceil(data.total.length / 40);
+          console.log(`Total pages: ${totalPages}`);
           Notiflix.Notify.success(
             `Hooray! We found ${data.total.length} images.`
           );
@@ -64,6 +67,8 @@ searchForm.addEventListener('submit', async e => {
         renderGallery(data.hits);
         console.log(data);
         window.addEventListener('scroll', infiniteScrollHandler);
+        totalPages = 13;
+        console.log(`Total pages: ${totalPages}`);
         Notiflix.Notify.success(`Hooray! We found 520 images.`);
         return;
       }
@@ -73,6 +78,8 @@ searchForm.addEventListener('submit', async e => {
       console.log(data);
       console.log(data.totalHits);
       window.addEventListener('scroll', infiniteScrollHandler);
+      totalPages = Math.ceil(data.totalHits / 40);
+      console.log(`Total pages: ${totalPages}`);
       Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
       return;
     }
@@ -133,13 +140,6 @@ async function scrolling() {
   page += 1;
 
   //Checking for maximum pages number
-  if (page === 14) {
-    Notiflix.Notify.warning(
-      'Sorry, these are the last images matching your search query. Please try to search something else.'
-    );
-    window.removeEventListener('scroll', infiniteScrollHandler);
-    return;
-  }
 
   spinner.classList.remove('visually-hidden');
   window.removeEventListener('scroll', infiniteScrollHandler);
@@ -150,22 +150,23 @@ async function scrolling() {
 
     if (data.hits.length !== 0) {
       renderGallery(data.hits);
-      Notiflix.Notify.success(`Hooray! We found ${data.hits.length} images.`);
+      // Notiflix.Notify.success(`Hooray! We found ${data.hits.length} images.`);
       window.scrollBy({
         top: 200 * 2,
         behavior: 'smooth',
       });
       spinner.classList.add('visually-hidden');
+
+      if (page === totalPages) {
+        Notiflix.Notify.warning(
+          'Sorry, these are the last images matching your search query. Please try to search something else.'
+        );
+        return;
+      }
+
       window.addEventListener('scroll', infiniteScrollHandler);
       return;
     }
-
-    //fires if fetch results in empty array
-    window.removeEventListener('scroll', infiniteScrollHandler);
-    spinner.classList.add('visually-hidden');
-    Notiflix.Notify.warning(
-      'Sorry, these are the last images matching your search query. Please try to search something else.'
-    );
   } catch (error) {
     //fires in case of error
 
@@ -176,3 +177,66 @@ async function scrolling() {
     window.removeEventListener('scroll', infiniteScrollHandler);
   }
 }
+
+// async function scrolling() {
+//   page += 1;
+
+//   //Checking for maximum pages number
+//   if (page === totalPages) {
+//     Notiflix.Notify.warning(
+//       'Sorry, these are the last images matching your search query. Please try to search something else.'
+//     );
+//     spinner.classList.remove('visually-hidden');
+
+//     try {
+//       const data = await fetchImages(currentQuery, page);
+
+//       if (data.hits.length !== 0) {
+//         renderGallery(data.hits);
+//         // Notiflix.Notify.success(`Hooray! We found ${data.hits.length} images.`);
+//         window.scrollBy({
+//           top: 200 * 2,
+//           behavior: 'smooth',
+//         });
+//         spinner.classList.add('visually-hidden');
+//         window.removeEventListener('scroll', infiniteScrollHandler);
+//         return;
+//       }
+//     }
+//     catch (error) {
+//       //fires in case of error
+
+//       console.log(error);
+
+//       spinner.classList.add('visually-hidden');
+
+//       window.removeEventListener('scroll', infiniteScrollHandler);
+//     }
+
+//     return;
+//   }
+
+//   spinner.classList.remove('visually-hidden');
+//   window.removeEventListener('scroll', infiniteScrollHandler);
+
+//   //fires if fetch results in non-empty array
+//   try {
+//     const data = await fetchImages(currentQuery, page);
+//     if (data.hits.length !== 0) {
+//       renderGallery(data.hits);
+//       // Notiflix.Notify.success(`Hooray! We found ${data.hits.length} images.`);
+//       window.scrollBy({
+//         top: 200 * 2,
+//         behavior: 'smooth',
+//       });
+//       spinner.classList.add('visually-hidden');
+//       window.addEventListener('scroll', infiniteScrollHandler);
+//       return;
+//     }
+//   } catch (error) {
+//     //fires in case of error
+//     console.log(error);
+//     spinner.classList.add('visually-hidden');
+//     window.removeEventListener('scroll', infiniteScrollHandler);
+//   }
+// }

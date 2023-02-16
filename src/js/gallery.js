@@ -84,10 +84,16 @@ searchForm.addEventListener('submit', async e => {
 ///Scrolling function
 
 async function scrolling() {
+  window.removeEventListener('scroll', infiniteScrollHandler);
+  if (page === totalPages) {
+    Notiflix.Notify.warning(
+      'Sorry, these are the last images matching your search query. Please try to search something else.'
+    );
+    return;
+  }
   page += 1;
 
   spinner.classList.remove('visually-hidden');
-  window.removeEventListener('scroll', infiniteScrollHandler);
 
   try {
     const data = await fetchImages(currentQuery, page);
@@ -99,14 +105,6 @@ async function scrolling() {
         behavior: 'smooth',
       });
       spinner.classList.add('visually-hidden');
-
-      if (page === totalPages) {
-        Notiflix.Notify.warning(
-          'Sorry, these are the last images matching your search query. Please try to search something else.'
-        );
-        return;
-      }
-
       window.addEventListener('scroll', infiniteScrollHandler);
       return;
     }
